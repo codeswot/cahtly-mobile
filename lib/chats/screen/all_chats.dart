@@ -46,6 +46,11 @@ class AllChatsListScreen extends StatelessWidget {
           );
         },
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     ChatService().deleteAll();
+      //   },
+      // ),
     );
   }
 }

@@ -4,7 +4,7 @@ part 'chat_data.g.dart';
 
 @RealmModel()
 class _ChatData {
-  // @PrimaryKey()
+  @PrimaryKey()
   late String chatId;
   late String roomId;
   late String text;

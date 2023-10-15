@@ -20,10 +20,25 @@ class ChatDatabase {
   Stream<List<ChatData>> getAllByRoomId$(String roomId) {
     Realm realm = Realm(_config);
 
-    return realm
-        .query<ChatData>("roomId == '$roomId'")
-        .changes
-        .map((event) => event.results.toList());
+    final chatDataResults =
+        realm.query<ChatData>("roomId == '$roomId'").changes;
+
+    return chatDataResults.map((event) {
+      final chatDataList = event.results.toList();
+
+      final distinctChatDataMap = <String, ChatData>{};
+
+      for (final chatData in chatDataList) {
+        if (!distinctChatDataMap.containsKey(chatData.chatId)) {
+          distinctChatDataMap[chatData.chatId] = chatData;
+        }
+      }
+
+      // Extract distinct chatData items from the map
+      final distinctChatDataList = distinctChatDataMap.values.toList();
+
+      return distinctChatDataList;
+    });
   }
 
   Stream<List<ChatData>> getAll$() {
@@ -67,7 +82,7 @@ class ChatDatabase {
   update(ChatData chat) async {
     Realm realm = Realm(_config);
     realm.write(() {
-      realm.add(chat, update: true);
+      realm.add<ChatData>(chat, update: true);
     });
   }
 
@@ -89,7 +104,7 @@ class ChatDatabase {
   deleteAll() {
     Realm realm = Realm(_config);
     realm.write(() {
-      realm.deleteAll();
+      realm.deleteAll<ChatData>();
     });
   }
 }

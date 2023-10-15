@@ -7,36 +7,42 @@ enum ChatsStatus {
 }
 
 final class ChatsState extends Equatable {
-  const ChatsState._({
-    required this.status,
-    this.errorMessage = '',
-    this.chats = const Stream.empty(),
-  });
-
-  const ChatsState.initial()
-      : this._(
-          status: ChatsStatus.initial,
-          chats: const Stream.empty(),
-          errorMessage: '',
-        );
-
-  const ChatsState.loaded(Stream<List<ChatData>> chats)
-      : this._(
-          status: ChatsStatus.loaded,
-          chats: chats,
-          errorMessage: '',
-        );
-
-  const ChatsState.error(String error)
-      : this._(
-          status: ChatsStatus.error,
-          errorMessage: error,
-        );
-
   final ChatsStatus status;
   final Stream<List<ChatData>> chats;
+  final Stream<List<ChatData>> roomChat;
   final String errorMessage;
+  const ChatsState({
+    required this.status,
+    required this.chats,
+    required this.roomChat,
+    required this.errorMessage,
+  });
+  copyWith({
+    ChatsStatus? status,
+    Stream<List<ChatData>>? chats,
+    Stream<List<ChatData>>? roomChat,
+    String? errorMessage,
+  }) {
+    return ChatsState(
+      status: status ?? this.status,
+      chats: chats ?? this.chats,
+      roomChat: roomChat ?? this.roomChat,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
+
+  factory ChatsState.initial(Stream<List<ChatData>> chats) => ChatsState(
+        status: ChatsStatus.initial,
+        chats: chats,
+        roomChat: Stream.value([]),
+        errorMessage: '',
+      );
 
   @override
-  List<Object?> get props => [status, chats, errorMessage];
+  List<Object?> get props => [
+        status,
+        chats,
+        roomChat,
+        errorMessage,
+      ];
 }

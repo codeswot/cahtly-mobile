@@ -29,7 +29,7 @@ class ChatScreen extends StatelessWidget {
             ),
           ),
           body: StreamBuilder<List<ChatData>>(
-            stream: state.chats,
+            stream: state.roomChat,
             builder: (context, snapshot) {
               final chats = snapshot.data ?? [];
 
